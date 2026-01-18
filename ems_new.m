@@ -1,4 +1,15 @@
 function [xs, ys] = ems(C, Q, n, delta, dist_max, lambda, eps, max_iters, k)
+% Parameters:
+%   C        : (n1+n2)x2 data points [xc yc]
+%   Q        : nox2 obstacle boundary samples
+%   n        : number of nodes of the spline
+%   delta    : E4 offset
+%   dist_max : E4/E5 active distance threshold
+%   lambda   : [lambda1..lambda5] scalar parameterd for E1..E5
+%   eps      : stopping tolerance on ||delta s||_inf
+%   max_iters: maximum amount of iterations
+%   k        : 1, 2, 12 order of partial derivatives
+
 
 %Get coordinates
 xc = C(1:n); yc = C(n+1:2*n);
@@ -33,16 +44,16 @@ end
 %Iteration process
 for it = 1:max_iters
 
-    %Create stacked x, y matrix
+    %Create stacked x, y matrix for knn search
     s2 = [s(1:n), s(n+1:2*n)];
 
-    % %Find nearest obstacle point
+    %Find nearest obstacle point
     knn = 1;
     [imin, dmin] = knnsearch(Q, s2, 'K', knn, 'Distance','euclidean');
     QN = Q(imin, :);
     qnx = QN(:, 1); qny = QN(:, 2);
 
-    %Compute normalized displacement vectors: u = qk - s
+    %Compute normalized displacement u = (q - s)/||q-s||
     U = zeros(n, 2);
     UT = QN - s2;
     nz = dmin > 0;
@@ -70,7 +81,7 @@ for it = 1:max_iters
 
     % **************Internal energy*****************************************
 
-    % E1: residuals
+    %E1: residuals
     A1_x = eye(n);
     b1x  = xc; b1y  = yc;
     A1 = blkdiag(A1_x, A1_x);
@@ -113,7 +124,7 @@ for it = 1:max_iters
     %Assembly matrix A
     b = [bx; by];
 
-    % Avoid singularity, add diagonal matrix
+    %Avoid singularity, add diagonal matrix
     A = A + 1e-12*eye(2*n);
 
     %Find solution (simple inversion)
@@ -121,13 +132,18 @@ for it = 1:max_iters
 
     %Stopping condition
     step = norm(s_new - s, inf);
+
+    %Print error
     fprintf('Outer %2d: ||delta s||_inf = %.3e\n', it, step);
+
+    %Update the solution
+    s = s_new;
+    
+    %Stop iteration process
     if step < eps
         break;
     end
 
-    %Update the solution
-    s = s_new;
 
 end
 
@@ -174,14 +190,14 @@ plot (xq6, yq6, 'k');
 plot (xq7, yq7, 'k');
 plot (xq8, yq8, 'k');
 
-%Plot curve
+%Plot curve c(t)
 plot (xc, yc, 'k');
 
 %Stacked vectors
 C = [xc; yc];
 Q = [[xq1', yq1']; [xq2', yq2']; [xq3', yq3']; [xq4', yq4']; [xq5', yq5']; [xq6', yq6']; [xq7', yq7']; [xq8', yq8']];
 
-%Input parameters of s(t) for estimators
+%Input parameters of s(t)
 delta = 0.30; dist_max = 3.0;
 lambda = [1.0,  10.0,  1.0,  1.0,  1];
 max_iters = 1;
