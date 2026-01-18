@@ -4,9 +4,7 @@ The code  focuses on the design of an energy-minimizing spline that approximates
 
 The total energy $E(s(t))$ of the spline $s(t)$ is the sum of the
 internal energy $E_{int}(s(t))$ and an external energy $E_{ext}(s(t))$
-$$
-E(s(t))=E_{int}(s(t))+E_{ext}(s(t)).\label{eq:ES}
-$$
+$$E(s(t))=E_{int}(s(t))+E_{ext}(s(t)).$$
 
 
 ## Example 1: ems_new.m
