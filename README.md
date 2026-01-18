@@ -4,7 +4,7 @@ The code  focuses on the design of an energy-minimizing spline that approximates
 
 
 
-## Example 1: ems\_new.m
+## Example 1: ems_new.m
 
 The first example ilustrates spline interacting with multiple obstacles. The spline is attracted or repelled  by near obstacles so that it forms an approximated offset curve with the distance of δ from obstacles.
 
@@ -24,7 +24,7 @@ The first example ilustrates spline interacting with multiple obstacles. The spl
 
 %   lambda   : [lambda1..lambda5] scalar parameterd for E1..E5
 
-%   eps      : stopping tolerance on ||delta s||\_inf
+%   eps      : stopping tolerance on ||delta s||_inf
 
 %   max_iters: maximum amount of iterations
 
@@ -32,7 +32,7 @@ The first example ilustrates spline interacting with multiple obstacles. The spl
 
 
 
-![ems]( curves_offsets.svg)
+![ems]( curves_offsets.png)
 
 ## Example 2: ems_c0_c2_new.m
 
@@ -76,7 +76,7 @@ Two discrete splines  can be proposed as C0-C2 continuous at a junction point, w
 
 
 
-![ems]( splines_c0_c2.svg)
+![ems]( splines_c0_c2.png)
 
 
 
