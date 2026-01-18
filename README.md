@@ -2,6 +2,11 @@
 
 The code  focuses on the design of an energy-minimizing spline that approximates a curve, fits a set of points, adapts its shape to near obstacles
 
+The total energy $E(s(t))$ of the spline $s(t)$ is the sum of the
+internal energy $E_{int}(s(t))$ and an external energy $E_{ext}(s(t))$
+$$
+E(s(t))=E_{int}(s(t))+E_{ext}(s(t)).\label{eq:ES}
+$$
 
 
 ## Example 1: ems_new.m
