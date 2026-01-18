@@ -5,7 +5,19 @@ The code  focuses on the design of an energy-minimizing spline that approximates
 The total energy $E(s(t))$ of the spline $s(t)$ is the sum of the
 internal energy $E_{int}(s(t))$ and an external energy $E_{ext}(s(t))$
 $$E(s(t))=E_{int}(s(t))+E_{ext}(s(t)).$$
+## Internal energy
+Internal energy $E_{int}(s(t))$ of the spline $s(t)$ is a linear
+combination of three energy functionals 
+$$E_{int}(s(t))=\lambda_{1}E_{1}(s(t))+\lambda_{2}E_{2}(s(t))+\lambda_{3}E_{3}(s(t)),
+$$where $\lambda_{i}$ are the scalar factors, $\lambda_{i}\in\mathbb{R}^{+}$.
 
+## External energy
+The external energy $E_{ext}(s(t))$ of the spline $s(t)$, the linear
+combination of proposed energy functionals $E_{4,k}(s(t))$, $E_{5,k}(s(t))$,
+given by the external forces $\psi_{k}$ of $n_{o}$ obstacles $q_{k}(t)$,
+is 
+$$E_{ext}(s(t))=\sum_{k=1}^{n_{o}}\lambda_{4,k}E_{4,k}(s(t))+\sum_{k=1}^{n_{o}}\lambda_{5,k}E_{5,k}(s(t)),\label{eq:Fo2}$$
+where $\lambda_{i,k}$ are the scalar factors, $\lambda_{i,k}\in\mathbb{R}^{+}$.
 
 ## Example 1: ems_new.m
 
