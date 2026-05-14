@@ -31,11 +31,11 @@ The first example ilustrates spline interacting with multiple obstacles. The spl
 
 
 
-`% Parameters:
+% Parameters:
 
 %   C        : (n1+n2)x2 data points \[xc yc]
 
-%   Q        : nox2 obstacle boundary samples
+%   Q        : nox2 obstacle points \[xq yq]
 
 %   n        : number of nodes of the spline
 
@@ -73,7 +73,7 @@ Two discrete splines  can be proposed as C0-C2 continuous at a junction point, w
 
 %   C        : (n1+n2)x2 data points [xc yc]
 
-%   Q        : nox2 obstacle boundary samples
+%   Q        : nox2 obstacle points [xq yq]
 
 %   n1, n2   : number of nodes of the first/second spline
 
@@ -90,8 +90,6 @@ Two discrete splines  can be proposed as C0-C2 continuous at a junction point, w
 %   max_iters: maximum amount of iterations
 
 %   method   : 1 (backslash on KKT), 2 (LDL), 3 (null-space)
-
-%   cont     : 0,1,2 continuity mode
 
 %   stencil  : 3, 5 stencil size`
 
