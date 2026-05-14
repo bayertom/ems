@@ -1,20 +1,19 @@
 function [xs, ys] = ems_c0_c2(C, Q, n1, n2, h, delta, dist_max, lambda, eps, max_iters, method, cont, stencil)
-% Join two splines s1, s2 with energies E1..E5 and enforce
+% Join two splines s1, s2 with energies E1..E5 and enforce:
 %   cont = 0 : C0  only (position)
 %   cont = 1 : C0 + C1 (position + 1st derivative)
-%   cont = 2 : C0 + C1 + C2 (position + 1st + 2nd derivative)
+%   cont = 2 : C0 + C1 + C2 (position + 1st + 2nd derivatives)
 % Parameters:
 %   C        : (n1+n2)x2 data points [xc yc]
-%   Q        : nox2 obstacle boundary samples
+%   Q        : nox2 obstacle points [xq, yq]
 %   n1, n2   : number of nodes of the first/second spline
 %   h        : length step
 %   delta    : E4 offset
 %   dist_max : E4/E5 active distance threshold
-%   lambda   : [lambda1..lambda5] scalar parameterd for E1..E5
-%   eps      : stopping tolerance on ||delta s||_inf
+%   lambda   : [lambda1..lambda5] scalar parameters for E1..E5
+%   eps      : stopping tolerance
 %   max_iters: maximum amount of iterations
-%   method   : 1 (backslash on KKT), 2 (LDL), 3 (null-space)
-%   cont     : 0,1,2 continuity mode
+%   method   : 1 (KKT), 2 (LDL), 3 (null-space)
 %   stencil  : 3, 5 stencil size
 
 %Total nodes
@@ -63,12 +62,12 @@ L = D1.'*D1 + D2.'*D2;        % n12 x n12
 i_last  = n1;                 % last index of s1
 i_first = n1 + 1;             % first index of s2
 
-% C0: position equality p_{n1} = p_{n1+1}
+%C0: position equality p_{n1} = p_{n1+1}
 g0 = zeros(1,n12);
 g0(i_last)  =  1;
 g0(i_first) = -1;
 
-% C1: equality of derivatives p^{1}_{n1} = p^{1}_{n1+1}
+%C1: equality of derivatives p^{1}_{n1} = p^{1}_{n1+1}
 if cont >= 1
     %Last forward diff of s1
     d1L = D1(n1-1,:);
@@ -80,7 +79,7 @@ if cont >= 1
     g1  = d1L - d1R;
 end
 
-% C2: equality of derivatives p^{2}_{n1} = p^{2}_{n1+1}
+%C2: equality of derivatives p^{2}_{n1} = p^{2}_{n1+1}
 if cont >= 2
     %Last forward diff of s1
     d2L = D2(n1-2,:);         % last 2nd-diff on s1
@@ -146,7 +145,7 @@ for it = 1:max_iters
     QN  = Q(imin,:);
     qnx = QN(:,1); qny = QN(:,2);
 
-    % Normalized displacement u = (q - s)/||q-s||
+    %Normalized displacement u = (q - s)/||q-s||
     U = zeros(n12,2);
     UT = QN - s2;
     nz  = dmin > 0;
@@ -217,7 +216,7 @@ for it = 1:max_iters
     if method == 1
         sol = K \ bs;
 
-    % Solve KKT, LDL
+    %Solve KKT, LDL
     elseif method == 2
         [Lk, Dk, Pk] = ldl(K);
         rhs_perm = Pk.' * bs;
@@ -226,7 +225,7 @@ for it = 1:max_iters
         z = Lk.' \ w;
         sol = Pk * z;
 
-    % Solve KKT, Null-space
+    %Solve KKT, Null-space
     else
         Z = null(G,'r');   
         Ared = Z.' * A2D * Z;
@@ -236,7 +235,7 @@ for it = 1:max_iters
         sol  = [s_ns; zeros(m,1)];
     end
 
-    % Extract spline
+    %Extract spline
     s_new = sol(1:2*n12);
 
     %Stopping condition

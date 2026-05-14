@@ -1,7 +1,7 @@
 function [xs, ys] = ems(C, Q, n, delta, dist_max, lambda, eps, max_iters, k)
 % Parameters:
 %   C        : (n1+n2)x2 data points [xc yc]
-%   Q        : nox2 obstacle boundary samples
+%   Q        : nox2 obstacle data points [xq, yq]
 %   n        : number of nodes of the spline
 %   delta    : E4 offset
 %   dist_max : E4/E5 active distance threshold
@@ -25,10 +25,15 @@ D2 = diff(E, 2);
 
 %Smoothing matrix
 if k==1
+    %First derivative	
     D12 = sqrt(2)/2*[D1; D1];
+
 elseif k==2
+    %Second derivative	
     D12 = sqrt(2)/2*[D2; D2];
+
 else
+    %First and second derivatives
     D12 = [D1; D2];
 end
 
@@ -143,8 +148,6 @@ for it = 1:max_iters
     if step < eps
         break;
     end
-
-
 end
 
 %Get coordinates
